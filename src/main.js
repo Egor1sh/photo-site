@@ -1,21 +1,23 @@
 import './style.css'
 
+const base = import.meta.env.BASE_URL
+
 const images = [
-  '/images/photo_1.jpg',
-  '/images/photo_2.jpg',
-  '/images/photo_3.jpg',
-  '/images/photo_4.jpg',
-  '/images/photo_5.jpg',
-  '/images/photo_6.jpg',
-  '/images/photo_7.jpg',
-  '/images/photo_8.jpg',
-  '/images/photo_9.jpg',
-  '/images/photo_10.jpg',
-  '/images/photo_11.jpg',
-  '/images/photo_12.jpg',
-  '/images/photo_13.jpg',
-  '/images/photo_14.jpg',
-  '/images/photo_15.jpg'
+  base + 'images/photo_1.jpg',
+  base + 'images/photo_2.jpg',
+  base + 'images/photo_3.jpg',
+  base + 'images/photo_4.jpg',
+  base + 'images/photo_5.jpg',
+  base + 'images/photo_6.jpg',
+  base + 'images/photo_7.jpg',
+  base + 'images/photo_8.jpg',
+  base + 'images/photo_9.jpg',
+  base + 'images/photo_10.jpg',
+  base + 'images/photo_11.jpg',
+  base + 'images/photo_12.jpg',
+  base + 'images/photo_13.jpg',
+  base + 'images/photo_14.jpg',
+  base + 'images/photo_15.jpg',
 ]
 
 document.querySelector('#app').innerHTML = `
