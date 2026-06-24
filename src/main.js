@@ -1,53 +1,48 @@
 import './style.css'
+import { supabase } from './supabase'
 
-const images = [
-  "/photo-site/images/photo_1.jpg",
-  "/photo-site/images/photo_2.jpg",
-  "/photo-site/images/photo_3.jpg",
-  "/photo-site/images/photo_4.jpg",
-  "/photo-site/images/photo_5.jpg",
-  "/photo-site/images/photo_6.jpg",
-  "/photo-site/images/photo_7.jpg",
-  "/photo-site/images/photo_8.jpg",
-  "/photo-site/images/photo_9.jpg",
-  "/photo-site/images/photo_10.jpg",
-  "/photo-site/images/photo_11.jpg",
-  "/photo-site/images/photo_12.jpg",
-]
+const app = document.querySelector('#app')
 
-let currentImage = null
+app.innerHTML = `
+  <div class="container">
+    <h1>📸 Upload Gallery</h1>
 
-function openImage(src) {
-  currentImage = src
-  render()
+    <input type="file" id="fileInput" />
+    <button id="uploadBtn">Upload</button>
+
+    <div class="grid" id="grid"></div>
+  </div>
+`
+
+const fileInput = document.querySelector('#fileInput')
+const uploadBtn = document.querySelector('#uploadBtn')
+const grid = document.querySelector('#grid')
+
+uploadBtn.onclick = async () => {
+  const file = fileInput.files[0]
+  if (!file) return
+
+  const fileName = `${Date.now()}-${file.name}`
+
+  // 1. upload в Supabase
+  const { error } = await supabase.storage
+    .from('photos')
+    .upload(fileName, file)
+
+  if (error) {
+    console.log(error)
+    return
+  }
+
+  // 2. получить публичный URL
+  const { data } = supabase.storage
+    .from('photos')
+    .getPublicUrl(fileName)
+
+  // 3. показать фото
+  const img = document.createElement('img')
+  img.src = data.publicUrl
+  img.className = 'photo'
+
+  grid.appendChild(img)
 }
-
-function closeImage() {
-  currentImage = null
-  render()
-}
-
-function render() {
-  document.querySelector('#app').innerHTML = `
-    <div class="container">
-      <h1>📸 9А класс</h1>
-
-      <div class="grid">
-        ${images.map(img => `
-          <img src="${img}" class="photo" onclick="window.openImage('${img}')"/>
-        `).join('')}
-      </div>
-
-      ${currentImage ? `
-        <div class="lightbox" onclick="window.closeImage()">
-          <img src="${currentImage}" />
-        </div>
-      ` : ''}
-    </div>
-  `
-}
-
-window.openImage = openImage
-window.closeImage = closeImage
-
-render()
