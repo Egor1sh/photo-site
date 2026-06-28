@@ -3,11 +3,23 @@ import './style.css'
 const base = import.meta.env.BASE_URL
 
 // 👉 структура учеников
-const students = {
-  ivan: ['photo_1.jpg', 'photo_2.jpg'],
-  anya: ['photo_3.jpg'],
-  dima: ['photo_4.jpg', 'photo_5.jpg']
-}
+const students = [
+  {
+    id: "ivan",
+    name: "Иван",
+    photos: [
+      "photo_1.jpg",
+      "photo_2.jpg"
+    ]
+  },
+  {
+    id: "anya",
+    name: "Анна",
+    photos: [
+      "photo_3.jpg"
+    ]
+  }
+]
 
 // --------------------
 // LIGHTBOX (fullscreen)
@@ -42,18 +54,18 @@ lightbox.onclick = () => {
 }
 
 // --------------------
-// RENDER STUDENTS LIST
+// ГЛАВНАЯ СТРАНИЦА (список учеников)
 // --------------------
 function renderStudents() {
   return `
     <div class="container">
-      <h1>📸 9A класс</h1>
+      <h1>📸 9А класс</h1>
 
       <div class="grid">
-        ${Object.keys(students).map(name => `
-          <div class="card" onclick="openStudent('${name}')">
-            <h3>${name}</h3>
-            <p>${students[name].length} фото</p>
+        ${students.map(student => `
+          <div class="card" onclick="openStudent('${student.id}')">
+            <h2>${student.name}</h2>
+            <p>${student.photos.length} фото</p>
           </div>
         `).join('')}
       </div>
@@ -62,19 +74,35 @@ function renderStudents() {
 }
 
 // --------------------
-// RENDER STUDENT GALLERY
+// СТРАНИЦА УЧЕНИКА
 // --------------------
-function renderStudent(name) {
+function renderStudent(id) {
+  const student = students.find(s => s.id === id)
+
+  if (!student) {
+    return `
+      <div class="container">
+        <h1>Ученик не найден</h1>
+        <button onclick="goBack()">← Назад</button>
+      </div>
+    `
+  }
+
   return `
     <div class="container">
-      <button onclick="goBack()">← Назад</button>
-      <h2>${name}</h2>
+      <button class="back-btn" onclick="goBack()">← Назад</button>
+
+      <h1>${student.name}</h1>
 
       <div class="grid">
-        ${students[name].map(img => {
-          const full = base + 'images/' + img
+        ${student.photos.map(photo => {
+          const src = base + 'images/' + photo
           return `
-            <img src="${full}" class="photo" onclick="openLightbox('${full}')"/>
+            <img
+              src="${src}"
+              class="photo"
+              onclick="openLightbox('${src}')"
+            />
           `
         }).join('')}
       </div>
@@ -83,10 +111,10 @@ function renderStudent(name) {
 }
 
 // --------------------
-// NAVIGATION
+// НАВИГАЦИЯ
 // --------------------
-window.openStudent = (name) => {
-  document.querySelector('#app').innerHTML = renderStudent(name)
+window.openStudent = (id) => {
+  document.querySelector('#app').innerHTML = renderStudent(id)
 }
 
 window.goBack = () => {
