@@ -123,7 +123,7 @@ function renderStudent(id) {
 
       <div class="grid">
         ${student.photos.map(photo => {
-          const src = base + 'images/' + photo
+          const src = `${base}images/${student.folder}/${photo}`
           return `
             <img
               src="${src}"
@@ -136,7 +136,6 @@ function renderStudent(id) {
     </div>
   `
 }
-
 // --------------------
 // НАВИГАЦИЯ
 // --------------------
